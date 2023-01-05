@@ -2,12 +2,12 @@ export function parseText(text: string): number[][] {
   const parsed: number[][] = [];
   const lines = text.split("\n");
   if (lines.length != 9) {
-    throw `must have ${9} rows`;
+    throw `must have 9 rows`;
   }
   for (const line of lines) {
     const numStrings = line.split(",");
     if (numStrings.length != 9) {
-      throw `each row must have ${9} columns`;
+      throw `each row must have 9 columns`;
     }
     const newLine: number[] = [];
     for (const numString of numStrings) {
@@ -17,7 +17,7 @@ export function parseText(text: string): number[][] {
         throw `${numString} is not a number`;
       }
       if (newNum < 0 || newNum > 9) {
-        throw `${newNum} is not a valid number (must be between 0 and ${9} inclusive)`;
+        throw `${newNum} is not a valid number (must be between 0 and 9 inclusive)`;
       }
       newLine.push(newNum);
     }
@@ -27,15 +27,15 @@ export function parseText(text: string): number[][] {
 }
 
 export function matrixToString(matrix: number[][]): string {
-  let result = "";
+  let result: string[] = [];
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
-      result += matrix[row][col].toString();
-      if (col < 9 - 1) {
-        result += ",";
+      result.push(matrix[row][col].toString());
+      if (col < 8) {
+        result.push(",");
       }
     }
-    result += "\n";
+    result.push("\n");
   }
-  return result;
+  return result.join("");
 }

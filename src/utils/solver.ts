@@ -29,7 +29,6 @@ function traverse(
   for (let num = 1; num <= 9; num++) {
     if (canPlace(board, row, col, num)) {
       board[row][col] = num;
-      // console.log(matrixToString(board));
       if (traverse(board, nextRow, nextCol, count)) {
         return true;
       }
