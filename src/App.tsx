@@ -43,7 +43,8 @@ function App() {
         setSolution("");
       }
     } catch (error) {
-      setErrorMessage(error as string);
+      setErrorMessage("Parse failed: " + (error as string));
+      setIsValid(false);
       setSolution("");
     }
   }

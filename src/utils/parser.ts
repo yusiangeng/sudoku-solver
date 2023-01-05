@@ -2,19 +2,19 @@ export function parseText(text: string): number[][] {
   const parsed: number[][] = [];
   const lines = text.split("\n");
   if (lines.length != 9) {
-    throw `must have 9 rows`;
+    throw "input must have 9 rows";
   }
   for (const line of lines) {
     const numStrings = line.split(",");
     if (numStrings.length != 9) {
-      throw `each row must have 9 columns`;
+      throw "each row must have 9 columns";
     }
     const newLine: number[] = [];
     for (const numString of numStrings) {
       // empty string or whitespace only string will be converted to 0
       const newNum = Number(numString.trim());
       if (isNaN(newNum)) {
-        throw `${numString} is not a number`;
+        throw `${numString} is not a valid number (must be between 0 and 9 inclusive)`;
       }
       if (newNum < 0 || newNum > 9) {
         throw `${newNum} is not a valid number (must be between 0 and 9 inclusive)`;
