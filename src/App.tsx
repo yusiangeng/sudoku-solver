@@ -18,10 +18,13 @@ function App() {
       }
       if (isValidInput(matrix)) {
         setIsValid(true);
+        const executionStart = Date.now();
         solveSudoku(matrix);
+        const executionEnd = Date.now();
         setSolution(
           isValidSolution(matrix)
-            ? matrixToString(matrix)
+            ? `(solved in ${executionEnd - executionStart} ms)\n\n` +
+                matrixToString(matrix)
             : "Sorry, could not solve"
         );
       } else {
@@ -55,8 +58,12 @@ function App() {
       ></textarea>
       <pre>{errorMessage}</pre>
       <pre>{isValid ? "Input is valid" : "Input is NOT valid"}</pre>
-      <h2>Solution</h2>
-      <pre>{solution}</pre>
+      {solution && (
+        <>
+          <h2>Solution</h2>
+          <pre>{solution}</pre>
+        </>
+      )}
     </>
   );
 }
