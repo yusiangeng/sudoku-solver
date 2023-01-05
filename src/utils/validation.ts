@@ -16,7 +16,6 @@ export function isValidInput(input: number[][]): boolean {
       const num = input[row][col];
       if (num >= 1 && num <= 9) {
         if (foundNums.has(num)) {
-          console.log("failed row check");
           return false;
         }
         foundNums.add(num);
@@ -31,7 +30,6 @@ export function isValidInput(input: number[][]): boolean {
       const num = input[row][col];
       if (num >= 1 && num <= 9) {
         if (foundNums.has(num)) {
-          console.log("failed col check");
           return false;
         }
         foundNums.add(num);
@@ -48,7 +46,6 @@ export function isValidInput(input: number[][]): boolean {
           const num = input[row][col];
           if (num >= 1 && num <= 9) {
             if (foundNums.has(num)) {
-              console.log("failed subgrid check");
               return false;
             }
             foundNums.add(num);

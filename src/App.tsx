@@ -12,7 +12,6 @@ function App() {
   function test(input: string): void {
     try {
       let matrix = parseText(input); // throws error if parse fails
-      console.log(matrix);
       if (errorMessage) {
         setErrorMessage("");
       }
@@ -25,7 +24,7 @@ function App() {
           isValidSolution(matrix)
             ? `(solved in ${executionEnd - executionStart} ms)\n\n` +
                 matrixToString(matrix)
-            : "Sorry, could not solve"
+            : "Could not solve"
         );
       } else {
         setIsValid(false);
@@ -34,7 +33,6 @@ function App() {
     } catch (error) {
       setErrorMessage(error as string);
       setSolution("");
-      console.log(error);
     }
   }
 
