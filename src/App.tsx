@@ -1,13 +1,25 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 import { matrixToString, parseText } from "./utils/parser";
 import { solveSudoku } from "./utils/solver";
 import { isValidInput, isValidSolution } from "./utils/validation";
 
+const SAMPLE_INPUT =
+  "8, , , , , , , , \n" +
+  " , ,3,6, , , , , \n" +
+  " ,7, , ,9, ,2, , \n" +
+  " ,5, , , ,7, , , \n" +
+  " , , , ,4,5,7, , \n" +
+  " , , ,1, , , ,3, \n" +
+  " , ,1, , , , ,6,8\n" +
+  " , ,8,5, , , ,1, \n" +
+  " ,9, , , , ,4, , ";
+
 function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [solution, setSolution] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   function test(input: string): void {
     try {
@@ -47,12 +59,24 @@ function App() {
         <br />
         Use 0 (zero) or space or nothing to represent empty cell
       </p>
+      <button
+        onClick={() => {
+          if (textAreaRef.current) {
+            textAreaRef.current.value = SAMPLE_INPUT;
+            test(textAreaRef.current.value);
+          }
+        }}
+      >
+        Fill with sample input
+      </button>
+      <br />
       <textarea
         rows={10}
         cols={20}
         onChange={(e) => {
           test(e.target.value);
         }}
+        ref={textAreaRef}
       ></textarea>
       <pre>{errorMessage}</pre>
       <pre>{isValid ? "Input is valid" : "Input is NOT valid"}</pre>
