@@ -36,7 +36,7 @@ function App() {
           isValidSolution(matrix)
             ? `(solved in ${executionEnd - executionStart} ms)\n\n` +
                 matrixToString(matrix)
-            : "Could not solve"
+            : "Could not solve :("
         );
       } else {
         setIsValid(false);
@@ -54,11 +54,11 @@ function App() {
       <h1>Sudoku Solver</h1>
       <h2>Instructions</h2>
       <p>
-        Type each row on new line
+        Type each row on a new line
         <br />
-        For each row, separate values by comma
+        For each row, separate values using commas
         <br />
-        Use 0 (zero) or space or nothing to represent empty cell
+        Use 0 (zero) or space or nothing to represent an empty cell
       </p>
       <button
         onClick={() => {
