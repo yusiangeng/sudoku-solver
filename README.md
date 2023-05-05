@@ -2,4 +2,4 @@
 
 Sudoku Solver website that runs entirely on client.
 
-Deployed at [sudoku-solver-psi.vercel.app/](https://sudoku-solver-psi.vercel.app/)
+Try it out at [sudoku.yusiangeng.com](https://sudoku.yusiangeng.com/)
