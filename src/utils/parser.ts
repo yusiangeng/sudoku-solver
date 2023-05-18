@@ -14,10 +14,10 @@ export function parseText(text: string): number[][] {
       // empty string or whitespace only string will be converted to 0
       const newNum = Number(numString.trim());
       if (isNaN(newNum)) {
-        throw `${numString} is not a valid number (must be between 0 and 9 inclusive)`;
+        throw `${numString} is not a valid number (must be integer from 0-9)`;
       }
-      if (newNum < 0 || newNum > 9) {
-        throw `${newNum} is not a valid number (must be between 0 and 9 inclusive)`;
+      if (newNum < 0 || newNum > 9 || !Number.isInteger(newNum)) {
+        throw `${numString} is not a valid number (must be integer from 0-9)`;
       }
       newLine.push(newNum);
     }
