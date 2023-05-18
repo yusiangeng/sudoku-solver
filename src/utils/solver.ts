@@ -1,6 +1,4 @@
-import { matrixToString } from "./parser";
-
-const RECURSION_LIMIT = 2_000_000;
+const RECURSION_LIMIT = 5_000_000;
 
 export function solveSudoku(board: number[][]) {
   const count = [0];

@@ -1,7 +1,6 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import "./App.css";
 import { matrixToString, parseText } from "./utils/parser";
-import { solveSudoku } from "./utils/solver";
 import { isValidInput, isValidSolution } from "./utils/validation";
 
 const SAMPLE_INPUT =
@@ -15,37 +14,61 @@ const SAMPLE_INPUT =
   " , ,8,5, , , ,1, \n" +
   " ,9, , , , ,4, , ";
 
+// incremented every time the textarea input changes
+let userInputCounter = 0;
+
 function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isValid, setIsValid] = useState(false);
+  const [isSolving, setIsSolving] = useState(false);
   const [solution, setSolution] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  function test(input: string): void {
+  // run solveSudoku() in a separate web worker thread
+  const worker: Worker = useMemo(
+    () =>
+      new Worker(new URL("./worker.ts", import.meta.url), {
+        type: "module",
+      }),
+    []
+  );
+
+  // web worker posts a message when it has finished running solveSudoku()
+  worker.onmessage = (
+    e: MessageEvent<{
+      executionTime: number;
+      matrix: number[][];
+      counter: number;
+    }>
+  ) => {
+    const { executionTime, matrix, counter } = e.data;
+    if (counter !== userInputCounter) return; // user has changed the input
+    setIsSolving(false);
+    setSolution(
+      isValidSolution(matrix)
+        ? `Solution (solved in ${executionTime} ms):\n\n` +
+            matrixToString(matrix)
+        : "Could not solve :("
+    );
+  };
+
+  function handleChange(input: string) {
+    userInputCounter++;
+    setSolution("");
+    setIsSolving(false);
+    setIsValid(false);
+    let matrix: number[][];
     try {
-      let matrix = parseText(input); // throws error if parse fails
-      if (errorMessage) {
-        setErrorMessage("");
-      }
-      if (isValidInput(matrix)) {
-        setIsValid(true);
-        const executionStart = Date.now();
-        solveSudoku(matrix);
-        const executionEnd = Date.now();
-        setSolution(
-          isValidSolution(matrix)
-            ? `(solved in ${executionEnd - executionStart} ms)\n\n` +
-                matrixToString(matrix)
-            : "Could not solve :("
-        );
-      } else {
-        setIsValid(false);
-        setSolution("");
-      }
-    } catch (error) {
-      setErrorMessage("Parse failed: " + (error as string));
-      setIsValid(false);
-      setSolution("");
+      matrix = parseText(input);
+    } catch (err) {
+      setErrorMessage(err as string);
+      return;
+    }
+    setErrorMessage("");
+    if (isValidInput(matrix)) {
+      setIsValid(true);
+      setIsSolving(true);
+      worker.postMessage({ matrix, counter: userInputCounter });
     }
   }
 
@@ -64,7 +87,7 @@ function App() {
         onClick={() => {
           if (textAreaRef.current) {
             textAreaRef.current.value = SAMPLE_INPUT;
-            test(textAreaRef.current.value);
+            handleChange(textAreaRef.current.value);
           }
         }}
       >
@@ -75,18 +98,14 @@ function App() {
         rows={10}
         cols={20}
         onChange={(e) => {
-          test(e.target.value);
+          handleChange(e.target.value);
         }}
         ref={textAreaRef}
       ></textarea>
-      <pre>{errorMessage}</pre>
       <pre>{isValid ? "Input is valid" : "Input is NOT valid"}</pre>
-      {solution && (
-        <>
-          <h2>Solution</h2>
-          <pre>{solution}</pre>
-        </>
-      )}
+      <pre>{errorMessage}</pre>
+      <pre>{isSolving && "solving..."}</pre>
+      <pre>{solution}</pre>
     </>
   );
 }
